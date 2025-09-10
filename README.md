@@ -21,3 +21,23 @@ HIMPUNAN MAHASISWA PERANGKAT LUNAK - POLITEKNIK NEGERI INDRAMAYU
 - Lainnya: Tailwind CSS
 
 ---
+
+## 🧑‍💻 Install (local)
+
+```bash
+# Clone Repository
+git clone https://github.com/hima-rpl-polindra/client-hima-rpl2.git
+
+# Masuk ke folder project
+cd client-hima-rpl2
+
+# Install Dependency
+npm install
+
+# Jalankan Aplikasi
+npm run dev
+
+# Jalankan Tailwind
+npm run tailwind
+
+```
