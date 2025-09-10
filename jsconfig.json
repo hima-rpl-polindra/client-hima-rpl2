@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./*"],
+      "@tailus-ui/*": ["/components/tailus-ui/*"],
+      "@lib/*": ["/lib/*"],
+    }
+  }
+}

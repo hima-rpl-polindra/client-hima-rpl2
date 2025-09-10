@@ -1,0 +1,10 @@
+export default function robots() {
+  return {
+    rules: {
+      userAgent: '*',
+      allow: ['/', '/information', '/posting', '/blog'],
+      disallow: '/login/',
+    },
+    sitemap: 'https://himarpl-polindra.com/sitemap.xml',
+  }
+}
