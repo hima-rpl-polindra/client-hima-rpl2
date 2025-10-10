@@ -25,6 +25,7 @@ import useFetchData from "@/hooks/useFetchData";
 import { HiBookmark } from "react-icons/hi";
 import { GrWorkshop, GrAchievement } from "react-icons/gr";
 import { FiChevronsDown } from "react-icons/fi";
+import alumniData from "../src/dataMaster/data.json";
 
 export default function Home() {
   // active service background color
@@ -294,17 +295,25 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
             {/* RIGHTSIDE IMAGE SECTION */}
             <div className="hero__image__right" data-aos="fade-left">
               <div className="hero__image__content">
-                <img src="/img/hero-illustration.svg" alt="Hero Image" />
+                {/* <img src="/img/hero-illustration.svg" alt="Hero Image" /> */}
+
+                <img src="/img/model-pengurus2.png" alt="Hero Image" />
               </div>
             </div>
           </div>
         </div>
       </section>
       {/* INTRODUCE SECTION */}
+
       <section className="flex items-center justify-center px-6 py-20 bg-gray-50 dark:bg-[#0c0c0c] border border-[#eeeded] dark:border-[#232222]">
+        <div className="information__page p-6">
+          {/* === TABLE ALUMNI (DI ATAS) ===
+            Saya letakkan di luar kondisi loading agar Spinner tidak menutupi tabel */}
+        </div>
         <div className="flex flex-col md:flex-row items-center max-w-7xl w-full gap-16">
           <div className="relative w-full md:w-5/12">
             <div className="relative">
@@ -313,7 +322,7 @@ export default function Home() {
                   {"{}"}
                 </div>
                 <img
-                  src="/img/model-pengurus.png"
+                  src="/img/model-pengurus2.png"
                   alt="Code Your Future"
                   className="relative z-10 w-[90%] mx-auto h-auto"
                 />
