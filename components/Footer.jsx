@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { FaArrowTurnDown, FaInstagram } from "react-icons/fa6";
 import { HiOutlineMail } from "react-icons/hi";
+import { BiGrid } from "react-icons/bi";
 
 const Footer = () => {
   return (
@@ -140,12 +141,12 @@ const Footer = () => {
                   Hubungi Kami
                 </h2>
               </div>
-              <ul className="leading-8">
+              <ul className="leading-8 ">
                 <li>
                   <Link
                     href="https://www.instagram.com/official_himarpl"
                     target="_blank"
-                    className="flex gap-1 text-[#545454] dark:text-[#838282] hover:text-[#004aad] dark:hover:text-[#004aad]"
+                    className="flex gap-1 items-center text-[#545454] dark:text-[#838282] hover:text-[#004aad] dark:hover:text-[#004aad]"
                   >
                     <FaInstagram className="w-6 h-6" />
                     <span>@official_himarpl</span>
@@ -154,10 +155,19 @@ const Footer = () => {
                 <li>
                   <Link
                     href="mailto:himarpl@polindra.ac.id"
-                    className="flex gap-1 text-[#545454] dark:text-[#838282] hover:text-[#004aad] dark:hover:text-[#004aad]"
+                    className="flex items-center gap-1 text-[#545454] dark:text-[#838282] hover:text-[#004aad] dark:hover:text-[#004aad]"
                   >
                     <HiOutlineMail className="w-6 h-6" />
                     <span>himarpl@polindra.ac.id</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/masterDataAlumni"
+                    className="flex items-center gap-1 text-[#545454] dark:text-[#838282] hover:text-[#004aad] dark:hover:text-[#004aad]"
+                  >
+                    <BiGrid className="w-6 h-6" />
+                    <span>Data Alumni</span>
                   </Link>
                 </li>
               </ul>
@@ -167,10 +177,10 @@ const Footer = () => {
       </div>
       <div className="bg-[#004aad] py-4 text-white">
         <div className="container mx-auto px-4">
-          <div className="-mx-4 flex flex-wrap justify-between">
-            <div className="px-4 w-full text-center sm:w-auto sm:text-left">
+          <div className="flex items-center justify-center">
+            <p className="text-center">
               Copyright © 2025 HIMA-RPL POLINDRA. All Rights Reserved.
-            </div>
+            </p>
           </div>
         </div>
       </div>
