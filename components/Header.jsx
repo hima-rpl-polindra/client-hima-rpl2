@@ -204,9 +204,9 @@ export default function Header() {
               </li>
               <li>
                 <Link
-                  href="/masterDataAlumni"
-                  onClick={() => handleLinkClick("/masterDataAlumni")}
-                  className={activeLink === "/masterDataAlumni" ? "active" : ""}
+                  href="/master"
+                  onClick={() => handleLinkClick("/master")}
+                  className={activeLink === "/master" ? "active" : ""}
                 >
                   DATA ALUMNI
                 </Link>
