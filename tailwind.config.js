@@ -13,6 +13,10 @@ module.exports = {
       fontFamily: {
         fugazone: ["Fugaz One", ...fontFamily.sans],
       },
+      colors: {
+        kuning: "#FFFF00",
+        kuning2: "#2C6BF5",
+      },
       gap: {
         0: "0px",
         1: "0.25rem",

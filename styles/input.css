@@ -84,7 +84,7 @@ img {
 /* ==================================================== */
 /* ==================================================== */
 .bg__heroBannerImage {
-  background-image: url("/img/model-pengurus2.png")
+  background-image: url("/img/model-pengurus2.png");
   background-size: cover;
   background-position: center;
 }

@@ -1,13 +1,4 @@
-import {
-  FaCalendarDays,
-  FaFacebook,
-  FaInstagram,
-  FaLessThanEqual,
-  FaYoutube,
-} from "react-icons/fa6";
-
 import alumniData from "../../src/dataMaster/data.json";
-
 export default function MasterDataAlumni() {
   return (
     <>
@@ -21,7 +12,7 @@ export default function MasterDataAlumni() {
         <h1 className="text-center">Master Data Alumni</h1>
         <div className="alumni__table container  mb-8">
           <div className="bg-white rounded shadow p-4">
-            <h2 className="text-lg  font-semibold mb-4 text-center bg-red-500">
+            <h2 className="text-lg  font-semibold mb-4 text-center">
               Daftar Alumni Teknik Informatika
             </h2>
             <div className="overflow-x-auto">
