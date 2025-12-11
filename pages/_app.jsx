@@ -4,6 +4,7 @@ import "@/styles/custom-tailwind.css";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css"; // import aos css
+import ChatWidget from "@/components/ChatWidget";
 
 export default function App({ Component, pageProps }) {
   // AOS animation
@@ -11,7 +12,7 @@ export default function App({ Component, pageProps }) {
     // initialize aos
     AOS.init({
       // global settings
-      disable: false, // accepts following values: phone, tablet, mobile, boolean, expression for function.
+      disable: false,
       startEvent: "DOMContentLoaded",
       initClassName: "aos-init",
       animatedClassName: "aos-animate",
@@ -34,6 +35,7 @@ export default function App({ Component, pageProps }) {
     <>
       <Header />
       <Component {...pageProps} />
+      <ChatWidget />
       <Footer />
     </>
   );

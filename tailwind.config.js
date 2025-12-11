@@ -22,8 +22,8 @@ module.exports = {
         15: "1.5rem",
       },
       screens: {
-        "xs" : "360px",
-        "xxs" : "340px",
+        xs: "360px",
+        xxs: "340px",
       },
       animation: {
         lightFlow: "lightFlow 3s linear infinite",
@@ -36,5 +36,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tailwindcss-motion')], 
+  plugins: [require("tailwindcss-motion")],
 };
