@@ -6,7 +6,7 @@ import {
   FaYoutube,
 } from "react-icons/fa6";
 
-import alumniData from "../src/dataMaster/data.json";
+import alumniData from "../../src/dataMaster/data.json";
 
 export default function MasterDataAlumni() {
   return (
