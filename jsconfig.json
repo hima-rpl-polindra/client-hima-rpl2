@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "skipLibCheck": true, // <--- Tambahkan baris ini
     "paths": {
       "@/*": ["./*"],
       "@tailus-ui/*": ["/components/tailus-ui/*"],
