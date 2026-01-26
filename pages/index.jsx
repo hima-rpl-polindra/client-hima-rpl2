@@ -77,15 +77,15 @@ export default function Home() {
     // filter postings based on selectedCategory
     if (selectedCategory === "All") {
       setFilteredPostings(
-        allData.filter((postings) => postings.status === "publish")
+        allData.filter((postings) => postings.status === "publish"),
       );
     } else {
       setFilteredPostings(
         allData.filter(
           (postings) =>
             postings.status === "publish" &&
-            postings.postingCategory[0] === selectedCategory
-        )
+            postings.postingCategory[0] === selectedCategory,
+        ),
       );
     }
   }, [selectedCategory, allData]);
@@ -489,7 +489,7 @@ export default function Home() {
                     alldata.filter(
                       (ab) =>
                         ab.blogCategory[0] === "tutorial" &&
-                        ab.status === "publish"
+                        ab.status === "publish",
                     ).length
                   }
                   +
@@ -520,7 +520,7 @@ export default function Home() {
                     alldata.filter(
                       (ab) =>
                         ab.blogCategory[0] === "pengetahuan umum" &&
-                        ab.status === "publish"
+                        ab.status === "publish",
                     ).length
                   }
                   +
@@ -551,7 +551,7 @@ export default function Home() {
                     alldata.filter(
                       (ab) =>
                         ab.blogCategory[0] === "karya pengurus" &&
-                        ab.status === "publish"
+                        ab.status === "publish",
                     ).length
                   }
                   +
