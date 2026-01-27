@@ -301,7 +301,7 @@ export default function Home() {
               <div className="hero__image__content">
                 {/* <img src="/img/hero-illustration.svg" alt="Hero Image" /> */}
 
-                <img src="/img/model-pengurus2.png" alt="Hero Image" />
+                <img src="/img/hero_image.svg" alt="Hero Image" />
               </div>
             </div>
           </div>
