@@ -1,12 +1,11 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send } from "lucide-react";
+import { MessageSquareText, X, Send } from "lucide-react";
 
 export default function FloatingChat() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
 
-  // State loading
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [initialLoading, setInitialLoading] = useState(false);
 
@@ -17,7 +16,6 @@ export default function FloatingChat() {
 
   const chatRef = useRef(null);
 
-  // --- 1. DATA PENGETAHUAN (KAMUS BOT) ---
   const knowledgeBase = [
     {
       keywords: ["daftar", "gabung", "join", "masuk"],
@@ -46,7 +44,7 @@ export default function FloatingChat() {
       keywords: ["proker", "program", "kerja"],
       answer: "Proker unggulan kami: Tech Fair, Coding Camp, dan Bakti Sosial.",
     },
-    // Menambahkan contoh pertanyaan spesifik Anda
+
     {
       keywords: ["kapan", "didirikan", "tahun", "lahir", "sejarah"],
       answer:
@@ -58,11 +56,9 @@ export default function FloatingChat() {
     },
   ];
 
-  // --- 2. LOGIKA MENCARI JAWABAN ---
   const findAnswer = (userInput) => {
     const lowerInput = userInput.toLowerCase();
 
-    // Mencari kecocokan keyword
     const match = knowledgeBase.find((item) =>
       item.keywords.some((keyword) => lowerInput.includes(keyword)),
     );
@@ -74,7 +70,6 @@ export default function FloatingChat() {
     return "Maaf, saya belum mengerti pertanyaan itu. Coba gunakan kata kunci lain atau hubungi Admin.";
   };
 
-  // LOGIKA LOADING PERTAMA KALI
   useEffect(() => {
     if (open && isFirstLoad) {
       setInitialLoading(true);
@@ -85,7 +80,6 @@ export default function FloatingChat() {
     }
   }, [open, isFirstLoad]);
 
-  // Auto scroll
   useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTo({
@@ -104,7 +98,6 @@ export default function FloatingChat() {
     { text: "Program Kerja", keyword: "proker" },
   ];
 
-  // Fungsi membalas pesan (UI update)
   const handleReply = (userText, botReply) => {
     setMessages((prev) => [...prev, { sender: "user", text: userText }]);
     setIsTyping(true);
@@ -114,23 +107,18 @@ export default function FloatingChat() {
     }, 1000);
   };
 
-  // --- 3. HANDLE INPUT KETIKAN MANUAL ---
   const handleSendInput = () => {
     if (!input.trim()) return;
 
     const userText = input;
     setInput("");
 
-    // Cari jawaban berdasarkan teks user (Logika Baru)
     const answer = findAnswer(userText);
 
-    // Tampilkan chat
     handleReply(userText, answer);
   };
 
-  // --- 4. HANDLE KLIK TOMBOL SHORTCUT ---
   const handleQuickReplyClick = (textLabel, keywordContext) => {
-    // Cari jawaban berdasarkan keyword shortcut
     const answer = findAnswer(keywordContext);
     handleReply(textLabel, answer);
   };
@@ -145,7 +133,6 @@ export default function FloatingChat() {
             : "opacity-0 translate-y-10 scale-95 pointer-events-none"
         }`}
       >
-        {/* HEADER (Warna ASLI: from-kuning2 to-kuning2) */}
         <div className="bg-gradient-to-r from-kuning2 to-kuning2 p-3 flex items-center justify-between shadow-md">
           <div className="flex items-center gap-2">
             <div className="relative">
@@ -156,14 +143,14 @@ export default function FloatingChat() {
                   className="w-6 h-6 object-contain"
                 />
               </div>
-              {/* Dot Status (Warna ASLI) */}
+
               <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-kuning border-2 border-kuning rounded-full"></span>
             </div>
             <div>
               <h3 className="font-bold text-white text-sm leading-tight">
-                Asisten HIMA
+                Asisten HIMA RPL
               </h3>
-              {/* Text Online (Warna ASLI) */}
+
               <p className="text-teal-100 text-[10px]">Online</p>
             </div>
           </div>
@@ -175,7 +162,6 @@ export default function FloatingChat() {
           </button>
         </div>
 
-        {/* BODY */}
         <div
           ref={chatRef}
           className="h-[250px] overflow-y-auto p-3 bg-gray-50 flex flex-col gap-2 custom-scrollbar relative"
@@ -183,7 +169,6 @@ export default function FloatingChat() {
           {initialLoading ? (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-50 z-10">
               <div className="flex space-x-2">
-                {/* Animasi Loading (Warna ASLI: bg-kuning2) */}
                 <div className="w-3 h-3 bg-kuning2 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                 <div className="w-3 h-3 bg-kuning2 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
                 <div className="w-3 h-3 bg-kuning2 rounded-full animate-bounce"></div>
@@ -223,16 +208,13 @@ export default function FloatingChat() {
           )}
         </div>
 
-        {/* QUICK REPLIES */}
         {!initialLoading && (
           <div className="bg-gray-50 px-2 pb-2">
             <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide px-1">
               {quickReplies.map((qr, i) => (
                 <button
                   key={i}
-                  // Menggunakan handler baru
                   onClick={() => handleQuickReplyClick(qr.text, qr.keyword)}
-                  // Styling Quick Reply (Warna ASLI: border-kuning2 text-kuning2)
                   className="whitespace-nowrap px-3 py-1 bg-white border border-kuning2 text-kuning2 text-[10px] rounded-full hover:bg-teal-50 hover:border-blue-300 transition shadow-sm flex-shrink-0"
                 >
                   {qr.text}
@@ -242,7 +224,6 @@ export default function FloatingChat() {
           </div>
         )}
 
-        {/* FOOTER INPUT */}
         <div className="p-2 bg-white border-t border-gray-100 flex items-center gap-2">
           <input
             type="text"
@@ -251,13 +232,11 @@ export default function FloatingChat() {
             onKeyDown={(e) => e.key === "Enter" && handleSendInput()}
             disabled={initialLoading}
             placeholder={initialLoading ? "Menghubungkan..." : "Ketik pesan..."}
-            // Styling Input (Warna ASLI: focus:ring-kuning2)
             className="flex-1 bg-gray-100 text-gray-700 text-xs rounded-full px-3 py-2 focus:outline-none focus:ring-1 focus:ring-kuning2 transition"
           />
           <button
             onClick={handleSendInput}
             disabled={!input.trim() || initialLoading}
-            // Styling Tombol Kirim (Warna ASLI: bg-kuning2)
             className={`p-2 rounded-full text-white transition-all shadow-md flex items-center justify-center ${
               input.trim() && !initialLoading
                 ? "bg-kuning2 hover:bg-blue-300 scale-100"
@@ -269,10 +248,8 @@ export default function FloatingChat() {
         </div>
       </div>
 
-      {/* FLOATING BUTTON (LAUNCHER) */}
       <button
         onClick={() => setOpen(!open)}
-        // Styling Tombol Buka Tutup (Warna ASLI: bg-kuning2)
         className={`fixed bottom-6 right-6 p-3.5 rounded-full shadow-2xl transition-all duration-300 z-[9999] flex items-center justify-center group ${
           open ? "bg-red-500 rotate-90" : "bg-kuning2 hover:bg-kuning2 rotate-0"
         }`}
@@ -281,7 +258,7 @@ export default function FloatingChat() {
           <X size={24} color="white" />
         ) : (
           <>
-            <MessageCircle
+            <MessageSquareText
               size={24}
               color="white"
               className="absolute group-hover:scale-0 transition-transform duration-200"
@@ -291,9 +268,9 @@ export default function FloatingChat() {
               className="w-6 h-6 object-contain scale-0 group-hover:scale-100 transition-transform duration-200"
               alt="Chat"
             />
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white animate-pulse">
+            {/* <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white animate-pulse">
               1
-            </span>
+            </span> */}
           </>
         )}
       </button>
