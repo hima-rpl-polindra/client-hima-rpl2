@@ -173,7 +173,7 @@ export default function Home() {
       title: "Akademik & Informasi",
       description:
         "Menciptakan sinergi dukungan akademis dan penyebaran informasi yang efektif.",
-      image: "/img/model-pengurus-4.png",
+      image: "/img/model_pengurus.png",
       features: [
         {
           name: "Dukungan Akademik",
@@ -322,7 +322,7 @@ export default function Home() {
                   {"{}"}
                 </div>
                 <img
-                  src="/img/model-pengurus2.png"
+                  src="/img/model_pengurus.png"
                   alt="Code Your Future"
                   className="relative z-10 w-[90%] mx-auto h-auto"
                 />
@@ -413,7 +413,8 @@ export default function Home() {
               <div className="w-full md:w-1/3 flex justify-center">
                 <div className="w-72 h-72 relative">
                   <img
-                    src="/img/model-pengurus-1.png"
+                    // src="/img/model-pengurus-1.png"
+                    src="/img/model_pengurus.png"
                     alt="HIMA-RPL"
                     className="w-full h-full object-cover"
                   />
