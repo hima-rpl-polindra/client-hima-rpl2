@@ -322,7 +322,7 @@ export default function Home() {
                   {"{}"}
                 </div>
                 <img
-                  src="/img/model-pengurus2.png"
+                  src="/img/model-pengurus.png"
                   alt="Code Your Future"
                   className="relative z-10 w-[90%] mx-auto h-auto"
                 />
