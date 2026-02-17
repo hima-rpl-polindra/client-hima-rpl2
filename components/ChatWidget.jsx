@@ -67,7 +67,7 @@ export default function FloatingChat() {
       return match.answer;
     }
 
-    return "Maaf, saya belum mengerti pertanyaan itu. Coba gunakan kata kunci lain atau hubungi Admin.";
+    return "Mohon maaf, saya belum memahami pertanyaan Anda. Bisa tolong berikan penjelasan lebih detail atau tanyakan hal lainnya?";
   };
 
   useEffect(() => {
@@ -90,12 +90,12 @@ export default function FloatingChat() {
   }, [messages, isTyping, initialLoading]);
 
   const quickReplies = [
-    { text: "Info Pendaftaran", keyword: "daftar" },
-    { text: "Agenda Terdekat", keyword: "agenda" },
-    { text: "Kontak Admin", keyword: "kontak" },
-    { text: "Lokasi Sekretariat", keyword: "lokasi" },
-    { text: "Struktur Organisasi", keyword: "struktur" },
-    { text: "Program Kerja", keyword: "proker" },
+    // { text: "Info Pendaftaran", keyword: "daftar" },
+    // { text: "Agenda Terdekat", keyword: "agenda" },
+    // { text: "Kontak Admin", keyword: "kontak" },
+    // { text: "Lokasi Sekretariat", keyword: "lokasi" },
+    // { text: "Struktur Organisasi", keyword: "struktur" },
+    // { text: "Program Kerja", keyword: "proker" },
   ];
 
   const handleReply = (userText, botReply) => {
