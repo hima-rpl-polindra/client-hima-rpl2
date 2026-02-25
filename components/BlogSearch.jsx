@@ -29,7 +29,7 @@ export default function Blogsearch(props) {
     }
 
     const filteredblogs = publishedData.filter((blog) =>
-      blog.title.toLowerCase().includes(blogTitle.toLowerCase())
+      blog.title.toLowerCase().includes(blogTitle.toLowerCase()),
     );
 
     setSearchResult(filteredblogs); // setSearchResult should be used to update searchResult state
@@ -68,7 +68,7 @@ export default function Blogsearch(props) {
                     {searchResult.slice(0, 10).map((blog) => {
                       return (
                         <Link
-                          href={`/blogs/${blog.slug}`}
+                          href={`/blog/${blog.slug}`}
                           key={blog._id}
                           className="search__results"
                           onClick={props.cls}
