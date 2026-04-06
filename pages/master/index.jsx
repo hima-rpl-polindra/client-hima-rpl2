@@ -1,19 +1,26 @@
 import { useState, useEffect } from "react";
-import alumniData from "../../src/dataMaster/data.json";
+// IMPORT HOOK FETCH DATA KAMU
+import useFetchData from "../../hooks/useFetchData"; // Sesuaikan path jika letak foldernya berbeda
 
 export default function MasterDataAlumni() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Cek apakah data JSON benar-benar kosong (bukan karena filter pencarian)
+  // MENGAMBIL DATA DARI API LOKAL CLIENT
+  const { alldata: alumniData, loading } = useFetchData("/api/alumni");
+
+  // Cek apakah data benar-benar ada
   const hasData = alumniData && alumniData.length > 0;
 
+  // FILTER PENCARIAN (Mencakup Nama, Posisi, Industri, dan Angkatan)
   const filteredData = hasData
     ? alumniData.filter(
         (alumni) =>
-          alumni.nama_alumni.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          alumni.perusahaan.toLowerCase().includes(searchTerm.toLowerCase()),
+          alumni.nama?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          alumni.posisi?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          alumni.industri?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          alumni.angkatan?.toString().includes(searchTerm),
       )
     : [];
 
@@ -32,6 +39,7 @@ export default function MasterDataAlumni() {
   const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
   const getInitials = (name) => {
+    if (!name) return "AL";
     return name
       .split(" ")
       .map((n) => n[0])
@@ -65,9 +73,14 @@ export default function MasterDataAlumni() {
         </p>
       </div>
 
-      {/* KONDISI UTAMA: Jika Data Ada vs Data Kosong */}
-      {!hasData ? (
-        // TAMPILAN JIKA JSON KOSONG (Empty State)
+      {loading ? (
+        <div className="flex flex-col items-center justify-center py-20">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-gray-500 dark:text-neutral-400 font-medium">
+            Memuat data database...
+          </p>
+        </div>
+      ) : !hasData ? (
         <div className="flex flex-col items-center justify-center py-16 px-4 bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-800 border-dashed transition-all duration-300">
           <div className="bg-gray-100 dark:bg-neutral-800 p-6 rounded-full mb-6">
             <svg
@@ -92,7 +105,6 @@ export default function MasterDataAlumni() {
           </p>
         </div>
       ) : (
-        // TAMPILAN JIKA DATA ADA (Search Bar & Table)
         <>
           <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 bg-white dark:bg-neutral-900 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800 transition-colors duration-300">
             <div className="w-full md:w-1/2 relative">
@@ -114,7 +126,7 @@ export default function MasterDataAlumni() {
               <input
                 type="text"
                 className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-neutral-700 rounded-lg leading-5 bg-white dark:bg-neutral-800 text-gray-900 dark:text-neutral-100 placeholder-gray-500 dark:placeholder-neutral-500 focus:outline-none focus:placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm transition-colors"
-                placeholder="Cari nama alumni atau perusahaan..."
+                placeholder="Cari nama, angkatan, industri, atau posisi..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -128,7 +140,7 @@ export default function MasterDataAlumni() {
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-4 text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider w-64 text-center"
+                      className="px-6 py-4 text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider w-16 text-center"
                     >
                       No
                     </th>
@@ -136,13 +148,25 @@ export default function MasterDataAlumni() {
                       scope="col"
                       className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider"
                     >
-                      Nama Alumni
+                      Nama Lengkap
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-center text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider"
+                    >
+                      Angkatan
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider"
                     >
-                      Perusahaan
+                      Bidang Industri
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider"
+                    >
+                      Posisi / Pekerjaan
                     </th>
                   </tr>
                 </thead>
@@ -150,51 +174,50 @@ export default function MasterDataAlumni() {
                   {currentItems.length > 0 ? (
                     currentItems.map((alumni, idx) => (
                       <tr
-                        key={idx}
+                        key={alumni._id || idx}
                         className="hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors group"
                       >
+                        {/* 1. NOMOR */}
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-neutral-400 text-center font-mono">
                           {indexOfFirstItem + idx + 1}
                         </td>
+
+                        {/* 2. NAMA LENGKAP */}
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-10 w-10">
                               <div
-                                className={`h-10 w-10 rounded-full flex items-center justify-center font-bold text-sm border ${getAvatarColor(
-                                  indexOfFirstItem + idx,
-                                )}`}
+                                className={`h-10 w-10 rounded-full flex items-center justify-center font-bold text-sm border ${getAvatarColor(indexOfFirstItem + idx)}`}
                               >
-                                {getInitials(alumni.nama_alumni)}
+                                {getInitials(alumni.nama)}
                               </div>
                             </div>
                             <div className="ml-4 text-left">
                               <div className="text-sm font-medium text-gray-900 dark:text-neutral-100">
-                                {alumni.nama_alumni}
-                              </div>
-                              <div className="text-xs text-gray-500 dark:text-neutral-500">
-                                Alumni Terdaftar
+                                {alumni.nama}
                               </div>
                             </div>
                           </div>
                         </td>
+
+                        {/* 3. ANGKATAN (Dibuat Badge agar menarik) */}
+                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 ">
+                            {alumni.angkatan}
+                          </span>
+                        </td>
+
+                        {/* 4. BIDANG INDUSTRI */}
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <svg
-                              className="h-5 w-5 text-gray-400 dark:text-neutral-500 mr-2"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                              />
-                            </svg>
-                            <span className="text-sm text-gray-700 dark:text-neutral-300">
-                              {alumni.perusahaan}
-                            </span>
+                          <div className="text-sm text-gray-700 dark:text-neutral-300 font-medium">
+                            {alumni.industri}
+                          </div>
+                        </td>
+
+                        {/* 5. POSISI / PEKERJAAN */}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-700 dark:text-neutral-300 font-medium">
+                            {alumni.posisi}
                           </div>
                         </td>
                       </tr>
@@ -202,7 +225,7 @@ export default function MasterDataAlumni() {
                   ) : (
                     <tr>
                       <td
-                        colSpan="3"
+                        colSpan="5"
                         className="px-6 py-10 text-center text-gray-500 dark:text-neutral-400 italic"
                       >
                         Data tidak ditemukan untuk pencarian "{searchTerm}"
@@ -213,6 +236,7 @@ export default function MasterDataAlumni() {
               </table>
             </div>
 
+            {/* Pagination Tetap Sama */}
             <div className="bg-gray-50 dark:bg-neutral-800 px-4 py-3 border-t border-gray-200 dark:border-neutral-800 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
               <p className="text-sm text-gray-700 dark:text-neutral-400">
                 Menampilkan{" "}
