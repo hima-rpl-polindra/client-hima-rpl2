@@ -1,299 +1,155 @@
-import { useState, useEffect } from "react";
-import useFetchData from "@/hooks/useFetchData"; // Sesuaikan path import hook-nya
+import Spinner from "@/components/Spinner";
+import useFetchData from "@/hooks/useFetchData";
 import Head from "next/head";
+import information from "../information";
+import Link from "next/link";
+import { useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { MdNavigateNext } from "react-icons/md";
+import { GrFormPrevious } from "react-icons/gr";
 
-export default function MasterDataAlumni() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+export default function Informations() {
+  // pagnation
+  const [currentPage, setCurrentPage] = useState(1); // for page 1
+  const [perPage] = useState(6);
 
-  // FETCH DATA MENGGUNAKAN HOOK
-  // Ganti URL ini dengan URL API Admin kamu. Jika beda project di lokal, gunakan http://localhost:3000/api/alumni
-  const { alldata: alumniData, loading } = useFetchData(
-    "http://localhost:3000/api/alumni",
+  // search
+  const [searchQuery, setSearchQuery] = useState("");
+  const { alldata: allData, loading } = useFetchData("/api/informations");
+  const publishData = allData.filter(
+    (information) => information.status === "publish",
   );
 
-  // Cek apakah data benar-benar ada
-  const hasData = alumniData && alumniData.length > 0;
-
-  // FILTERING: Sesuaikan key dengan skema database (nama, posisi, industri)
-  const filteredData = hasData
-    ? alumniData.filter(
-        (alumni) =>
-          alumni.nama?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          alumni.posisi?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          alumni.industri?.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
-    : [];
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm]);
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-  const nextPage = () =>
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
-
-  const getInitials = (name) => {
-    if (!name) return "AL";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .substring(0, 2)
-      .toUpperCase();
+  // function to handle page change
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
-  const getAvatarColor = (index) => {
-    const colors = [
-      "bg-blue-100 text-blue-600 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-neutral-700",
-      "bg-purple-100 text-purple-600 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-neutral-700",
-      "bg-green-100 text-green-600 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-neutral-700",
-      "bg-orange-100 text-orange-600 border-orange-200 dark:bg-orange-900 dark:text-orange-200 dark:border-neutral-700",
-      "bg-red-100 text-red-600 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-neutral-700",
-    ];
-    return colors[index % colors.length];
+  const createdAtDate =
+    allData && allData[0]?.createdAt
+      ? new Date(allData && allData[0]?.createdAt)
+      : null;
+
+  // filter all data based on search query
+  const filteredInformations =
+    searchQuery.trim() === ""
+      ? publishData
+      : publishData.filter((information) =>
+          information.title.toLowerCase().includes(searchQuery.toLowerCase()),
+        );
+
+  // Count the total items that have been filtered
+  const totalFilteredItems = filteredInformations.length;
+
+  // Calculate total pages based on filtered data
+  const totalPages = Math.ceil(totalFilteredItems / perPage);
+
+  // calculate index of the first information displayed on the current page
+  const indexOfFirstInformation = (currentPage - 1) * perPage;
+  const indexOfLastInformation = currentPage * perPage;
+
+  // Get the current page's informations
+  const currentInformations = filteredInformations.slice(
+    indexOfFirstInformation,
+    indexOfLastInformation,
+  );
+
+  // Create an array for page numbers
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+
+  // function to format the date
+  const formatDate = (date) => {
+    // check if date if valid
+    if (!date || isNaN(date)) {
+      return ""; // or handle the error as needed
+    }
+
+    const options = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour12: true, // use 12-hour format
+    };
+    return new Intl.DateTimeFormat("id-ID", options).format(date);
   };
 
   return (
     <>
       <Head>
-        <title>Master Data Alumni</title>
+        <title>Informasi HIMA-RPL</title>
       </Head>
-      <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 text-gray-900 dark:text-neutral-100 font-sans py-10 px-4 sm:px-6 lg:px-8 mt-20 md:mt-24 transition-colors duration-300">
-        <div className="text-center mb-10">
-          <h2 className="text-sm font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">
-            Master Data Alumni
-          </h2>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
-            Daftar Alumni Rekayasa Perangkat Lunak
-          </h1>
-          <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 dark:text-neutral-400">
-            Telusuri jejak karir dan pencapaian lulusan kami.
-          </p>
-        </div>
-
-        {/* TAMPILAN LOADING */}
+      <div className="information__page">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-gray-500 dark:text-neutral-400 font-medium">
-              Memuat data alumni...
-            </p>
-          </div>
-        ) : !hasData ? (
-          // TAMPILAN JIKA DATA KOSONG
-          <div className="flex flex-col items-center justify-center py-16 px-4 bg-white dark:bg-neutral-900 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-800 border-dashed transition-all duration-300">
-            <div className="bg-gray-100 dark:bg-neutral-800 p-6 rounded-full mb-6">
-              <svg
-                className="w-16 h-16 text-gray-400 dark:text-neutral-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-                />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-              Belum Ada Data Alumni
-            </h3>
-            <p className="text-gray-500 dark:text-neutral-400 text-center max-w-md mb-6">
-              Saat ini database alumni masih kosong.
-            </p>
-          </div>
+          <Spinner />
         ) : (
-          // TAMPILAN TABEL JIKA DATA ADA
           <>
-            <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 bg-white dark:bg-neutral-900 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-800 transition-colors duration-300">
-              <div className="w-full md:w-1/2 relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg
-                    className="h-5 w-5 text-gray-400 dark:text-neutral-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
+            <div className="place__information">
+              <div className="container">
+                <div className="information__cards">
+                  {currentInformations.map((information) => {
+                    return (
+                      <Link
+                        href={`/information/${information.slug}`}
+                        key={information._id}
+                        className="information__card__contents"
+                      >
+                        <div className="information__card__image">
+                          <img
+                            src={information.images[0]}
+                            alt={information.title}
+                          />
+                        </div>
+                        <div className="information__card__title">
+                          <h2>{information.title}</h2>
+                          <div className="information__tags">
+                            {information.tags.map((tag) => {
+                              return <span key={tag}>{tag}</span>;
+                            })}
+                          </div>
+                          <p>{formatDate(new Date(information.createdAt))}</p>
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
-                <input
-                  type="text"
-                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-neutral-700 rounded-lg leading-5 bg-white dark:bg-neutral-800 text-gray-900 dark:text-neutral-100 placeholder-gray-500 dark:placeholder-neutral-500 focus:outline-none focus:placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 sm:text-sm transition-colors"
-                  placeholder="Cari nama, posisi, atau industri..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-neutral-900 shadow-xl rounded-xl overflow-hidden border border-gray-200 dark:border-neutral-800 transition-colors duration-300">
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-neutral-800">
-                  <thead className="bg-gray-50 dark:bg-neutral-800">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-4 text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider w-16 text-center"
-                      >
-                        No
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider"
-                      >
-                        Nama Alumni
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider"
-                      >
-                        Posisi / Pekerjaan
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider"
-                      >
-                        Industri
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white dark:bg-neutral-900 divide-y divide-gray-200 dark:divide-neutral-800">
-                    {currentItems.length > 0 ? (
-                      currentItems.map((alumni, idx) => (
-                        <tr
-                          key={alumni._id || idx}
-                          className="hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors group"
-                        >
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-neutral-400 text-center font-mono">
-                            {indexOfFirstItem + idx + 1}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="flex-shrink-0 h-10 w-10">
-                                <div
-                                  className={`h-10 w-10 rounded-full flex items-center justify-center font-bold text-sm border ${getAvatarColor(
-                                    indexOfFirstItem + idx,
-                                  )}`}
-                                >
-                                  {getInitials(alumni.nama)}
-                                </div>
-                              </div>
-                              <div className="ml-4 text-left">
-                                <div className="text-sm font-medium text-gray-900 dark:text-neutral-100">
-                                  {alumni.nama}
-                                </div>
-                                <div className="text-xs text-gray-500 dark:text-neutral-500">
-                                  Angkatan: {alumni.angkatan}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-700 dark:text-neutral-300 font-medium">
-                              {alumni.posisi}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-neutral-800 dark:text-neutral-300 border border-gray-200 dark:border-neutral-700">
-                              {alumni.industri}
-                            </div>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td
-                          colSpan="4"
-                          className="px-6 py-10 text-center text-gray-500 dark:text-neutral-400 italic"
-                        >
-                          Data tidak ditemukan untuk pencarian "{searchTerm}"
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Pagination */}
-              <div className="bg-gray-50 dark:bg-neutral-800 px-4 py-3 border-t border-gray-200 dark:border-neutral-800 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <p className="text-sm text-gray-700 dark:text-neutral-400">
-                  Menampilkan{" "}
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    {filteredData.length > 0 ? indexOfFirstItem + 1 : 0}
-                  </span>{" "}
-                  sampai{" "}
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    {Math.min(indexOfLastItem, filteredData.length)}
-                  </span>{" "}
-                  dari{" "}
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    {filteredData.length}
-                  </span>{" "}
-                  data
-                </p>
-
-                {filteredData.length > itemsPerPage && (
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={prevPage}
-                      disabled={currentPage === 1}
-                      className={`px-3 py-1 rounded-md text-sm font-medium border ${
-                        currentPage === 1
-                          ? "text-gray-400 border-gray-200 bg-gray-100 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-600 cursor-not-allowed"
-                          : "text-gray-700 bg-white border-gray-300 hover:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-700"
-                      } transition-colors`}
-                    >
-                      Prev
-                    </button>
-
-                    <div className="flex space-x-1">
-                      {Array.from({ length: totalPages }, (_, i) => (
-                        <button
-                          key={i + 1}
-                          onClick={() => paginate(i + 1)}
-                          className={`px-3 py-1 rounded-md text-sm font-medium border ${
-                            currentPage === i + 1
-                              ? "bg-blue-600 border-blue-600 text-white"
-                              : "text-gray-700 bg-white border-gray-300 hover:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-700"
-                          } transition-colors`}
-                        >
-                          {i + 1}
-                        </button>
-                      ))}
-                    </div>
-
-                    <button
-                      onClick={nextPage}
-                      disabled={currentPage === totalPages}
-                      className={`px-3 py-1 rounded-md text-sm font-medium border ${
-                        currentPage === totalPages
-                          ? "text-gray-400 border-gray-200 bg-gray-100 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-600 cursor-not-allowed"
-                          : "text-gray-700 bg-white border-gray-300 hover:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-700"
-                      } transition-colors`}
-                    >
-                      Next
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
           </>
+        )}
+        {currentInformations.length === 0 ? (
+          ""
+        ) : (
+          <div className="pagination__button flex justify-center">
+            <button
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              <GrFormPrevious size={30} />
+            </button>
+            {pageNumbers
+              .slice(
+                Math.max(currentPage - 3, 0),
+                Math.min(currentPage + 2, pageNumbers.length),
+              )
+              .map((number) => (
+                <button
+                  key={number}
+                  onClick={() => paginate(number)}
+                  className={`${currentPage === number ? "active" : ""}`}
+                >
+                  {number}
+                </button>
+              ))}
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage >= totalPages}
+            >
+              <MdNavigateNext size={30} />
+            </button>
+          </div>
         )}
       </div>
     </>
