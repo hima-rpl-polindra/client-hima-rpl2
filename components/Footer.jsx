@@ -149,7 +149,7 @@ const Footer = () => {
                     className="flex gap-1 items-center text-[#545454] dark:text-[#838282] hover:text-[#004aad] dark:hover:text-[#004aad]"
                   >
                     <FaInstagram className="w-6 h-6" />
-                    <span>@official_himarpl</span>
+                    <span>@himarpl_polindra</span>
                   </Link>
                 </li>
                 <li>
@@ -163,7 +163,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    href="/masterDataAlumni"
+                    href="/master"
                     className="flex items-center gap-1 text-[#545454] dark:text-[#838282] hover:text-[#004aad] dark:hover:text-[#004aad]"
                   >
                     <BiGrid className="w-6 h-6" />
