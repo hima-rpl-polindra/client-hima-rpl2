@@ -275,7 +275,7 @@ export default function Home() {
                     <li>
                       <Link
                         className="social__link"
-                        href="https://www.instagram.com/official_himarpl"
+                        href="https://www.instagram.com/himarpl__polindra"
                         target="_blank"
                       >
                         <FaInstagram className="size-6" />

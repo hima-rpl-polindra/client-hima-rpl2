@@ -59,6 +59,31 @@ export default function MasterDataAlumni() {
     return colors[index % colors.length];
   };
 
+  const getPageNumbers = (current, total) => {
+    const delta = 1;
+    const pages = [];
+    const left = current - delta;
+    const right = current + delta;
+
+    for (let i = 1; i <= total; i++) {
+      if (i === 1 || i === total || (i >= left && i <= right)) {
+        pages.push(i);
+      }
+    }
+
+    const result = [];
+    let prev = null;
+    for (const p of pages) {
+      if (prev !== null) {
+        if (p - prev === 2) result.push(prev + 1);
+        else if (p - prev > 2) result.push("...");
+      }
+      result.push(p);
+      prev = p;
+    }
+    return result;
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 text-gray-900 dark:text-neutral-100 font-sans py-10 px-4 sm:px-6 lg:px-8 mt-20 md:mt-24 transition-colors duration-300">
       <div className="text-center mb-10">
@@ -255,45 +280,67 @@ export default function MasterDataAlumni() {
               </p>
 
               {filteredData.length > itemsPerPage && (
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-1 flex-wrap">
+                  {/* Loncat 2x ke kiri */}
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 2))}
+                    disabled={currentPage <= 1}
+                    className="h-8 px-2 rounded-md border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-gray-700 dark:text-neutral-200 text-sm disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors"
+                  >
+                    «
+                  </button>
+
+                  {/* Prev */}
                   <button
                     onClick={prevPage}
                     disabled={currentPage === 1}
-                    className={`px-3 py-1 rounded-md text-sm font-medium border ${
-                      currentPage === 1
-                        ? "text-gray-400 border-gray-200 bg-gray-100 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-600 cursor-not-allowed"
-                        : "text-gray-700 bg-white border-gray-300 hover:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-700"
-                    } transition-colors`}
+                    className="h-8 px-2 rounded-md border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-gray-700 dark:text-neutral-200 text-sm disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors"
                   >
-                    Prev
+                    ‹
                   </button>
 
-                  <div className="flex space-x-1">
-                    {Array.from({ length: totalPages }, (_, i) => (
-                      <button
-                        key={i + 1}
-                        onClick={() => paginate(i + 1)}
-                        className={`px-3 py-1 rounded-md text-sm font-medium border ${
-                          currentPage === i + 1
-                            ? "bg-blue-600 border-blue-600 text-white"
-                            : "text-gray-700 bg-white border-gray-300 hover:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-700"
-                        } transition-colors`}
+                  {/* Nomor halaman dengan ellipsis */}
+                  {getPageNumbers(currentPage, totalPages).map((page, i) =>
+                    page === "..." ? (
+                      <span
+                        key={`dots-${i}`}
+                        className="h-8 w-8 flex items-center justify-center text-sm text-gray-400 dark:text-neutral-500"
                       >
-                        {i + 1}
+                        …
+                      </span>
+                    ) : (
+                      <button
+                        key={page}
+                        onClick={() => paginate(page)}
+                        className={`h-8 w-8 rounded-md border text-sm font-medium transition-colors ${
+                          currentPage === page
+                            ? "bg-blue-600 border-blue-600 text-white"
+                            : "bg-white dark:bg-neutral-800 border-gray-300 dark:border-neutral-600 text-gray-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-700"
+                        }`}
+                      >
+                        {page}
                       </button>
-                    ))}
-                  </div>
+                    ),
+                  )}
 
+                  {/* Next */}
                   <button
                     onClick={nextPage}
                     disabled={currentPage === totalPages}
-                    className={`px-3 py-1 rounded-md text-sm font-medium border ${
-                      currentPage === totalPages
-                        ? "text-gray-400 border-gray-200 bg-gray-100 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-600 cursor-not-allowed"
-                        : "text-gray-700 bg-white border-gray-300 hover:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-700"
-                    } transition-colors`}
+                    className="h-8 px-2 rounded-md border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-gray-700 dark:text-neutral-200 text-sm disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors"
                   >
-                    Next
+                    ›
+                  </button>
+
+                  {/* Loncat 2x ke kanan */}
+                  <button
+                    onClick={() =>
+                      setCurrentPage((p) => Math.min(totalPages, p + 2))
+                    }
+                    disabled={currentPage >= totalPages}
+                    className="h-8 px-2 rounded-md border border-gray-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 text-gray-700 dark:text-neutral-200 text-sm disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors"
+                  >
+                    »
                   </button>
                 </div>
               )}
