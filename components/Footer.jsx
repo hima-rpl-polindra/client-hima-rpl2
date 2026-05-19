@@ -144,7 +144,7 @@ const Footer = () => {
               <ul className="leading-8 ">
                 <li>
                   <Link
-                    href="https://www.instagram.com/official_himarpl"
+                    href="https://www.instagram.com/himarpl__polindra"
                     target="_blank"
                     className="flex gap-1 items-center text-[#545454] dark:text-[#838282] hover:text-[#004aad] dark:hover:text-[#004aad]"
                   >
